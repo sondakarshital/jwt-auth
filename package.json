@@ -4,7 +4,8 @@
   "description": "Implementation of jwt token,refresh token",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev" : "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
+    "nodemon": "^3.1.7",
     "redis": "^4.7.0"
   }
 }

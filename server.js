@@ -24,6 +24,24 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
+// sign up user
+app.post('/signup', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Username and password are required' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashedPassword });
+    await user.save();
+    res.status(201).json({ message: `${username} user created` });
+  } catch (err) {
+    res.status(500).json({ message: 'Error creating user' });
+  }
+});
+
 // User Login
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -35,6 +53,7 @@ app.post('/login', async (req, res) => {
 
   const accessToken = generateAccessToken({ username: user.username });
   const refreshToken = generateRefreshToken({ username: user.username });
+  if (user?.refreshTokens?.length >= 3) user.refreshTokens.shift();
   user.refreshTokens.push(refreshToken);
   await user.save();
 
